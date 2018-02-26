@@ -4,6 +4,8 @@ import scrapy
 import re
 from bs4 import BeautifulSoup
 from scrapy.http import Request
+from DScrapy.items import DscrapyItem
+
 
 class DSpider(scrapy.Spider):
     name = "DSpider"
@@ -41,17 +43,18 @@ class DSpider(scrapy.Spider):
         yield Request(next, callback=self.getnovel)
 
     def getmessage(self, response):
+        item = DscrapyItem()
         message = BeautifulSoup(response.text, 'lxml').find('table', id='at').find_all('td')
-        name = response.meta['name']
-        url = response.meta['url']
-        number = response.meta['num']
-        category = message[0].text
-        author = message[1].text
-        status = message[2].text
-        collect = message[3].text
-        novelNumber = message[4].text
-        lastUpTime = message[5].text
-        click = message[6].text
-        push = message[9].text
+        item['name'] = response.meta['name']
+        item['url'] = response.meta['url']
+        item['number'] = response.meta['num']
+        item['category'] = message[0].text
+        item['author'] = message[1].text
+        item['status'] = message[2].text
+        item['collect'] = message[3].text
+        item['novelNumber'] = message[4].text
+        item['lastUpTime'] = message[5].text
+        item['click'] = message[6].text
+        item['push'] = message[9].text
 
 

@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
 
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+
+from .mysql import mySql
+from DScrapy.items import DscrapyItem
 
 
 class DscrapyPipeline(object):
+
     def process_item(self, item, spider):
-        return item
+
+        if isinstance(item, DscrapyItem):
+            number = item['number']
+            result = mySql.isexists(number)
+            if result[0] == 1:
+                print('该小说记录已存在')
+                pass
+            else:
+                mySql.insert(item['name'], item['author'], item['novelurl'], item['status'], item['novelNumber'],
+                             item['category'], item['number'], item['collect'], item['click'],
+                             item['push'], item['lastUpTime'])
+
